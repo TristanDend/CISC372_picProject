@@ -1,0 +1,5 @@
+
+image: pthread_image.c pthread_image.h
+	gcc -g phtread_image.c -o image -lm -lpthread
+clean:
+	rm -f pthread_image pthread_output.png
