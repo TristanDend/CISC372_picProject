@@ -1,0 +1,9 @@
+Script started on Mon Oct 27 19:03:17 2025
+^[]0;tdendorf@r1n12.darwin:~/CISC372_picProject^G^$
+Took 7 seconds
+^[]0;tdendorf@r1n12.darwin:~/CISC372_picProject^G[$
+Took 7 seconds
+^[]0;tdendorf@r1n12.darwin:~/CISC372_picProject^G[$
+exit
+
+Script done on Mon Oct 27 19:05:22 2025

@@ -134,7 +134,9 @@ int main(int argc,char** argv){
 
     int rows_per_thread = srcImage.height / thread_count;
 
-    for (int i = 0; i < thread_count; i++) {
+    int i,j;
+
+    for (i = 0; i < thread_count; i++) {
         thread_data[i].srcImage = &srcImage;
         thread_data[i].destImage = &destImage;
         memcpy(thread_data[i].algorithm,algorithms,sizeof(thread_data[i].algorithm));
@@ -143,8 +145,8 @@ int main(int argc,char** argv){
         else thread_data[i].endRow = (i+1) * rows_per_thread;
         pthread_create(&thread_handles[i],NULL,&convolute,&thread_data[i]);
     }
-    for (int i = 0; i < thread_count; i++) {
-        pthread_join(thread_handles[i],NULL);
+    for (j = 0; j < thread_count; j++) {
+        pthread_join(thread_handles[j],NULL);
     }
 
     stbi_write_png("pthread_output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
