@@ -1,5 +1,0 @@
-
-image: openmp_image.c image.h
-	gcc -g -Wall -fopenmp openmp_image.c -o image -lm
-clean:
-	rm -f openmp_image openmp_output.png

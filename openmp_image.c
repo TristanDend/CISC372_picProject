@@ -87,7 +87,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
 //Usage: Prints usage information for the program
 //Returns: -1
 int Usage(){
-    printf("Usage: image <filename> <type>\n\twhere type is one of (edge,sharpen,blur,gauss,emboss,identity)\n");
+    printf("Usage: image <filename> <thread_count> <type>\n\twhere type is one of (edge,sharpen,blur,gauss,emboss,identity)\n");
     return -1;
 }
 
@@ -109,17 +109,17 @@ int main(int argc,char** argv){
     long t1,t2;
     t1=time(NULL);
 
-    int thread_count = 10;
+    int thread_count = strtol(argv[2],NULL,10);
 
-    stbi_set_flip_vertically_on_load(0); 
-    if (argc!=3) return Usage();
+    stbi_set_flip_vertically_on_load(0);
+    if (argc!=4) return Usage();
     char* fileName=argv[1];
-    if (!strcmp(argv[1],"pic4.jpg")&&!strcmp(argv[2],"gauss")){
+    if (!strcmp(argv[1],"pic4.jpg")&&!strcmp(argv[3],"gauss")){
         printf("You have applied a gaussian filter to Gauss which has caused a tear in the time-space continum.\n");
     }
-    enum KernelTypes type=GetKernelType(argv[2]);
+    enum KernelTypes type=GetKernelType(argv[3]);
 
-    Image srcImage,destImage,bwImage;   
+    Image srcImage,destImage,bwImage;
     srcImage.data=stbi_load(fileName,&srcImage.width,&srcImage.height,&srcImage.bpp,0);
     if (!srcImage.data){
         printf("Error loading file %s.\n",fileName);
@@ -133,7 +133,7 @@ int main(int argc,char** argv){
 #   pragma omp parallel num_threads(thread_count)
     convolute(&srcImage,&destImage,algorithms[type]);
 
-    stbi_write_png("output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
+    stbi_write_png("openmp_output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
     stbi_image_free(srcImage.data);
 
     free(destImage.data);

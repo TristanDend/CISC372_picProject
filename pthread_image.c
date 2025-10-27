@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <time.h>
 #include <string.h>
-#include "image.h"
+#include "pthread_image.h"
 #include <pthread.h>
 
 #define STB_IMAGE_IMPLEMENTATION
@@ -85,7 +85,7 @@ void* convolute(void* arg){
 //Usage: Prints usage information for the program
 //Returns: -1
 int Usage(){
-    printf("Usage: image <filename> <type>\n\twhere type is one of (edge,sharpen,blur,gauss,emboss,identity)\n");
+    printf("Usage: image <filename> <thread_count> <type>\n\twhere type is one of (edge,sharpen,blur,gauss,emboss,identity)\n");
     return -1;
 }
 
@@ -107,19 +107,19 @@ int main(int argc,char** argv){
     long t1,t2;
     t1=time(NULL);
 
-    int thread_count = 10;
+    int thread_count = strtol(argv[2],NULL,10);
     pthread_t* thread_handles;
     thread_handles=(pthread_t*)malloc(thread_count*sizeof(pthread_t));
     ThreadArg* thread_data;
     thread_data=(ThreadArg*)malloc(thread_count*sizeof(ThreadArg));
 
     stbi_set_flip_vertically_on_load(0);
-    if (argc!=3) return Usage();
+    if (argc!=4) return Usage();
     char* fileName=argv[1];
-    if (!strcmp(argv[1],"pic4.jpg")&&!strcmp(argv[2],"gauss")){
+    if (!strcmp(argv[1],"pic4.jpg")&&!strcmp(argv[3],"gauss")){
         printf("You have applied a gaussian filter to Gauss which has caused a tear in the time-space continum.\n");
     }
-    enum KernelTypes type=GetKernelType(argv[2]);
+    enum KernelTypes type=GetKernelType(argv[3]);
 
     Image srcImage,destImage,bwImage;
     srcImage.data=stbi_load(fileName,&srcImage.width,&srcImage.height,&srcImage.bpp,0);
@@ -147,7 +147,7 @@ int main(int argc,char** argv){
         pthread_join(thread_handles[i],NULL);
     }
 
-    stbi_write_png("output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
+    stbi_write_png("pthread_output.png",destImage.width,destImage.height,destImage.bpp,destImage.data,destImage.bpp*destImage.width);
     stbi_image_free(srcImage.data);
 
     free(destImage.data);
