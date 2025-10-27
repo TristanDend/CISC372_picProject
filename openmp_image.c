@@ -69,7 +69,7 @@ void convolute(Image* srcImage,Image* destImage,Matrix algorithm){
     }
     else {
         start_row = rows_per_thread * my_rank;
-        end_row = rows_per_thread * my_rank;
+        end_row = rows_per_thread * (my_rank + 1);
     }
 
     int row,pix,bit,span;
